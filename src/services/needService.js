@@ -19,16 +19,14 @@ export function classifyNeeds(need) {
 };
 
 export async function findActiveNeeds(category) {
-  const needs = await Need.find({ archived: false }).sort({ createdAt: -1 })
+  const needs = await Need.find({ 
+    $or: [{ archived: false }, { archived: { $exists: false } }]
+  }).sort({ createdAt: -1 })
 
   if (!category) return needs
-
   return needs.filter(n => classifyNeed(n) === category)
 }
 
-export async function findActiveNeeds() {
-  return Need.find({ archived: false }).sort({ createdAt: -1 });
-}
 
 export async function findArchivedNeeds() {
   return Need.find({ archived: true }).sort({ doneAt: -1 });
