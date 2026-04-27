@@ -4,7 +4,7 @@ import { findUserById } from './userService.js';
 const PRODUCTS_KEYWORDS = ['продукт', 'харч', 'їж', 'круп', 'макарон', 'консерв', 'олія', 'масло', 'борошн', 'цукор', 'Продукти']
 const CHEMISTRY_KEYWORDS = ['хім', 'побутова', 'порош', 'миюч', 'мило', 'шампун', 'зубн', 'паста', 'папір', 'серветк', 'Хімія']
 
-export function classifyNeeds(need) {
+export function classifyNeed(need) {
   if (need?.type === 'other') return 'other';
 
   const desc = (need?.description || '').toLowerCase().trim();
@@ -140,7 +140,7 @@ export async function createNeedForUser(userId, { description, type }) {
 }
 
 
-export default async function findNeedByIdForUser(needId, authUserId) {
+export async function findNeedByIdForUser(needId, authUserId) {
   const user = await findUserById(authUserId);
   if (!user) {
     return { ok: false, status: 404, message: 'Користувача не знайдено' };
