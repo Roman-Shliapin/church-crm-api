@@ -8,7 +8,8 @@ import { listMembers, listCandidates } from '../services/adminService.js';
 
 export const getActiveNeeds = async (req, res) => {
   try {
-    const needs = await findActiveNeeds();
+    const { category } = req.query;
+    const needs = await findActiveNeeds(category);
     res.json(needs);
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера', error: error.message });

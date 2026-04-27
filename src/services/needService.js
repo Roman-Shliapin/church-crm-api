@@ -1,6 +1,31 @@
 import Need from '../models/Need.js';
 import { findUserById } from './userService.js';
 
+const PRODUCTS_KEYWORDS = ['продукт', 'харч', 'їж', 'круп', 'макарон', 'консерв', 'олія', 'масло', 'борошн', 'цукор', 'Продукти']
+const CHEMISTRY_KEYWORDS = ['хім', 'побутова', 'порош', 'миюч', 'мило', 'шампун', 'зубн', 'паста', 'папір', 'серветк', 'Хімія']
+
+export function classifyNeeds(need) {
+  if (need?.type === 'other') return 'other';
+
+  const desc = (need?.description || '').toLowerCase().trim();
+
+  if (need?.type === 'humanitarian') {
+    if (PRODUCTS_KEYWORDS.some(k => desc.includes(k.toLowerCase()))) return 'products'
+    if (CHEMISTRY_KEYWORDS.some(k => desc.includes(k.toLowerCase()))) return 'chemistry'
+    return 'other'
+  };
+
+  return 'other';
+};
+
+export async function findActiveNeeds(category) {
+  const needs = await Need.find({ archived: false }).sort({ createdAt: -1 })
+
+  if (!category) return needs
+
+  return needs.filter(n => classifyNeed(n) === category)
+}
+
 export async function findActiveNeeds() {
   return Need.find({ archived: false }).sort({ createdAt: -1 });
 }
