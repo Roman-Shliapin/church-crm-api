@@ -2,7 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js'
-import { protect } from './middlewares/auth.js';
+import profileRoutes from "./routes/profile.js"
 
 
 
@@ -16,6 +16,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
 // test route
 app.get("/", (req, res) => {
