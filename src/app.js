@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js'
+import { protect } from './middlewares/auth.js';
 
 
 
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.get("/", (req, res) => {
     res.json({ message: 'Church CRM API is running' })
 });
+
 
 mongoose
     .connect(process.env.MONGODB_URI)
