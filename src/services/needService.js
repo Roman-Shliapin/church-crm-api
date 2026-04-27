@@ -79,6 +79,24 @@ export async function createNeedForUser(userId, { description, type }) {
     return { ok: false, status: 404, message: 'Користувача не знайдено' };
   }
 
+  if (type === "humanitarian") {
+    if (!['Продукти', 'Хімія'].includes(description)) {
+      return {
+        ok: false,
+        status: 400,
+        message: 'Для гуманітарної допомоги оберіть: Продукти або Хімія',
+      }
+    };
+  };
+
+  if (type === "other" && (!description || description.trim().length < 5)) {
+    return {
+      ok: false,
+      status: 400,
+      message: 'Опис має містити щонайменше 5 символів',
+    }
+  }
+
   const now = new Date();
   const date = now.toLocaleString('uk-UA');
 
