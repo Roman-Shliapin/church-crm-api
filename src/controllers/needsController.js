@@ -1,56 +1,42 @@
-import Member from "../models/Member.js";
-import Candidate from "../models/Candidate.js";
-import Need from "../models/Need.js";
-
-
-const getUser = async (id) => {
-    const member = await Member.findById(id);
-    if (member) return member;
-    return await Candidate.findById(id)
-};
-
+import findNeedByIdForUser, {
+  findMyNeedsForUser,
+  createNeedForUser,
+} from '../services/needService.js';
 
 export const getMyNeeds = async (req, res) => {
-    try {
-        const user = await getUser(req.user.id);
-        if (!user) return res.status(404).json({ message: 'Користувача не знайдено' })
-        
-        const needs = await Need.find({ userId: user.id, archived: false });
-        res.json(needs);
-    } catch (error) {
-        res.status(500).json({ message: 'Помилка сервера', error: error.message })
+  try {
+    const result = await findMyNeedsForUser(req.user.id);
+    if (!result.ok) {
+      return res.status(result.status).json({ message: result.message });
     }
+    res.json(result.needs);
+  } catch (error) {
+    res.status(500).json({ message: 'Помилка сервера', error: error.message });
+  }
 };
 
 export const createNeed = async (req, res) => {
-    const { description, type } = req.body;
+  const { description, type } = req.body;
 
-    if (!description) {
-    return res.status(400).json({ message: 'Опис є обовʼязковим' })
+  if (!description) {
+    return res.status(400).json({ message: 'Опис є обовʼязковим' });
+  }
+
+  try {
+    const result = await createNeedForUser(req.user.id, { description, type });
+    if (!result.ok) {
+      return res.status(result.status).json({ message: result.message });
     }
+    res.status(201).json(result.need);
+  } catch (error) {
+    res.status(500).json({ message: 'Помилка сервера', error: error.message });
+  }
+};
 
-    try {
-        const user = await getUser(req.user.id);
-        if (!user) return res.status(404).json({ message: 'Користувача не знайдено' })
-        
-        const now = new Date();
-        const date = now.toLocaleString('uk-UA');
-
-        const need = await Need.create({
-            userId: user.id,
-            name: user.name,
-            baptism: user.baptism,
-            birthday: user.birthday,
-            phone: user.phone,
-            description,
-            type: type || 'other',
-            date,
-            status: 'нова',
-            archived: false,
-        })
-
-        res.status(201).json(need);
-    } catch (error) {
-        res.status(500).json({ message: 'Помилка сервера', error: error.message });
-    }
+export const getNeedById = async (req, res) => {
+  const result = await findNeedByIdForUser(req.params.id, req.user.id);
+  if (!result.ok) {
+    return res.status(result.status).json({ message: result.message })
+  }
+  res.json(result.need);
 }

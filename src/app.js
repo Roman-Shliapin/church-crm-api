@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js'
 import profileRoutes from "./routes/profile.js"
 import needsRoutes from "./routes/needs.js";
-
+import adminRoutes from "./routes/admin.js";
 
 dotenv.config()
 
@@ -18,6 +18,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/needs', needsRoutes);
+app.use("/api/admin", adminRoutes);
 
 // test route
 app.get("/", (req, res) => {
