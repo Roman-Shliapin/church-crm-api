@@ -1,5 +1,5 @@
 import Member from "../models/Member.js";
-import { createPost, deletePost, getAllPosts } from "../services/postService.js";
+import { createPost, deletePost, getAllPosts, toggleReaction } from "../services/postService.js";
 
 
 
@@ -40,3 +40,22 @@ export const removePost = async (req, res) => {
         res.status(500).json({ message: 'Помилка сервера', error: error.message })
     };
 };
+
+export const reactToPost = async (req, res) => {
+  const { type } = req.body
+
+  const validTypes = ['pray', 'heart', 'thumbs_up', 'dove', 'star']
+  if (!validTypes.includes(type)) {
+    return res.status(400).json({ message: 'Невідомий тип реакції' })
+  }
+
+  try {
+    const result = await toggleReaction(req.params.id, req.user.id, type)
+    if (!result.ok) {
+      return res.status(result.status).json({ message: result.message })
+    }
+    res.json(result.post)
+  } catch (error) {
+    res.status(500).json({ message: 'Помилка сервера', error: error.message })
+  }
+}
