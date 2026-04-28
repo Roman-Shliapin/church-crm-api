@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.js'
 import profileRoutes from "./routes/profile.js"
 import needsRoutes from "./routes/needs.js";
 import adminRoutes from "./routes/admin.js";
+import postRoutes from './routes/posts.js'
 
 dotenv.config()
 
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/needs', needsRoutes);
 app.use("/api/admin", adminRoutes);
+app.use('/api/posts', postRoutes);
 
 // test route
 app.get("/", (req, res) => {
