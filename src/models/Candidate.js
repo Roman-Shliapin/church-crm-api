@@ -10,6 +10,7 @@ const candidateSchema = new mongoose.Schema(
     phone: { type: String },
     email: { type: String, unique: true, sparse: true },
     password: { type: String },
+    expoPushToken: { type: String, default: null },
   },
   { timestamps: true, collection: 'candidates' }
 )

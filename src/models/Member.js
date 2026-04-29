@@ -11,6 +11,7 @@ const memberSchema = new mongoose.Schema(
     email: { type: String, unique: true, sparse: true },
     password: { type: String },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    expoPushToken: { type: String, default: null },
   },
   { timestamps: true, collection: 'members' }
 )

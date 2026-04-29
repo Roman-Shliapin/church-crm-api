@@ -28,6 +28,10 @@ export const createNeed = async (req, res) => {
     if (!result.ok) {
       return res.status(result.status).json({ message: result.message });
     }
+    await sendPushToAdmins(
+      '🆘 Нова заявка',
+      `${result.need.name}: ${description.slice(0, 80)}`
+    );
     res.status(201).json(result.need);
   } catch (error) {
     res.status(500).json({ message: 'Помилка сервера', error: error.message });

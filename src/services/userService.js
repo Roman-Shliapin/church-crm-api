@@ -14,3 +14,20 @@ export async function findProfileById(id) {
   }
   return user;
 }
+
+export async function savePushToken(userId, token) {
+  let user = await Member.findByIdAndUpdate(
+    userId,
+    { expoPushToken: token },
+    { new: true }
+  )
+  if (!user) {
+    user = await Candidate.findByIdAndUpdate(
+      userId,
+      { expoPushToken: token },
+      { new: true }
+    )
+  }
+  if (!user) return { ok: false, status: 404, message: 'Користувача не знайдено' }
+  return { ok: true }
+}

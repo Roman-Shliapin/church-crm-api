@@ -23,6 +23,8 @@ export const addPost = async (req, res) => {
         if (!result.ok) {
             return res.status(result.status).json({ message: result.message })
         };
+        await sendPushToAll(title, `${authorName}: ${content.slice(0, 100)}`)
+
         res.status(201).json(result.post)
     } catch (error) {
         res.status(500).json({ message: 'Помилка сервера', error: error.message })
@@ -71,3 +73,4 @@ export const pinPost = async (req, res) => {
     res.status(500).json({ message: 'Помилка сервера', error: error.message })
   }
 }
+
